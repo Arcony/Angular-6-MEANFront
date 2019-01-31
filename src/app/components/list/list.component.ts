@@ -17,7 +17,7 @@ export class ListComponent implements OnInit {
   user: User;
   users: User[];
   messages: Message[];
-  messageLike: Message[];
+  messageLike: Message;
   displayedColumns = ['userId','token','actionsColumn'];
 
   constructor(private userService: UserService, private messageService: MessageService, private router: Router) { }
@@ -27,35 +27,60 @@ export class ListComponent implements OnInit {
     }
 
 
-    likePost(id) {
-      this.messageService
-      .likePost(id)
-      .subscribe((data: Message[]) => {
-        this.messageLike = data;
-        console.log("LIKED",data);
-      });
+   upPost(message) {
+     console.log(message);
+     if(this.isLiked(message))
+     {
+       this.messageService
+       .dislikePost(message.id)
+       .subscribe((data: Message) => {
+         this.messageLike = data;
+         let indexMessage =  this.messages.findIndex(obj => obj.id === this.messageLike.id);
+         let indexUser =   this.messages[indexMessage].Users.findIndex(obj => obj.username === localStorage.getItem('username'));
+         if(indexUser > -1)
+         {
+         this.messages[indexMessage].Users[indexUser].Like.isLike = 0;
+         this.messages[indexMessage].likes = this.messages[indexMessage].likes - 1;
+         }
+       });
 
+     }
+     else
+     {
+      this.messageService
+      .likePost(message.id)
+      .subscribe((data: Message) => {
+        this.messageLike = data;
+        console.log(this.messages);
+        let indexMessage =  this.messages.findIndex(obj => obj.id === this.messageLike.id);
+        let indexUser = this.messages[indexMessage].Users.findIndex(obj => obj.username === localStorage.getItem('username'));
+        if(indexUser > -1 )
+        {
+          console.log(indexUser);
+        this.messages[indexMessage].Users[indexUser].Like.isLike = 1;
+        this.messages[indexMessage].likes = this.messages[indexMessage].likes + 1;
+        }
+      });
+     }
     }
 
-  fetchUsers() {
-    this.userService
-    .login("galietti.jeanfrdancois@gmail.com","passrd44")
-    .subscribe((data: User) => {
-      this.user = data;
-      console.log('Data Requested ....');
-      sessionStorage.setItem('token',this.user.token);
-      console.log('Token Saved');
-      console.log(sessionStorage.getItem('token'));
-    });
-  }
-
-  fetchMessages() {
+    fetchMessages() {
     this.userService
     .listMessages()
     .subscribe((data: Message[]) => {
       this.messages = data;
-      console.log(this.messages);
     });
+  }
+
+  isLiked(message) {
+    var indexUser = message.Users.findIndex(obj => obj.username ,  localStorage.getItem('username'));
+    console.log()
+    if(indexUser >= 0)
+    {
+      if(message.Users[indexUser].Like.isLike == 1)
+        return true;
+    }
+    return false;
   }
 
   //  this.userService.register().subscribe((users) => {

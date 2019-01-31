@@ -20,7 +20,8 @@
       <ng-container matColumnDef="actionsColumn">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let element">
-          <button mat-raised-button color="primary" (click)="likePost(element.id)"> Like </button>
+          <button mat-raised-button color="primary" *ngIf="!isLiked(element)" (click)="upPost(element)"> Like </button>
+          <button mat-raised-button color="primary" *ngIf="isLiked(element)" (click)="upPost(element)"> Dislike </button>
         </td>
         </ng-container>
 

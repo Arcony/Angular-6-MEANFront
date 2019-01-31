@@ -15,7 +15,7 @@ export class UserService {
     return this.http.get('http://localhost:8080/api/messages');
   }
 
-  
+
   register(email, username, password, bio) {
     const user =  {
       email: email,
@@ -34,6 +34,14 @@ export class UserService {
       password: password,
     }
     return this.http.post('http://localhost:8080/api/users/login',user);
+  }
+
+  setToken(token: string): void {
+    localStorage.setItem('token', token);
+  }
+
+  isLogged() {
+    return localStorage.getItem('token') != null;
   }
 
 }
