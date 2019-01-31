@@ -1,7 +1,7 @@
 <div>
   <br>
   <mat-card>
-    <button mat-raised-button color="primary" (click)="fetchUsers()"> Login </button>
+    <button mat-raised-button color="primary" (click)="logout()"> Logout </button>
     <br><br>
     <mat-divider></mat-divider>
     <br>
@@ -24,6 +24,13 @@
           <button mat-raised-button color="primary" *ngIf="isLiked(element)" (click)="upPost(element)"> Dislike </button>
         </td>
         </ng-container>
+
+        <ng-container matColumnDef="likeCounter">
+          <th mat-header-cell *matHeaderCellDef>Likes</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-raised-button color="primary"> {{element.likes}} </button>
+          </td>
+          </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

@@ -37,6 +37,12 @@ export class CreateComponent implements OnInit {
     });
   };
 
+  logout() {
+    console.log("logout?");
+    localStorage.clear;
+    this.router.navigate(['/login']);
+  }
+
   ngOnInit() {
   }
 

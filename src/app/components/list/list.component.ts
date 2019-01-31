@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material';
 
+import { Like } from '../../like.model';
+import { UserLikes } from '../../userlikes.model';
 import { User } from '../../user.model';
 import { UserService } from '../../user.service';
 import { Message } from '../../message.model';
@@ -18,7 +20,7 @@ export class ListComponent implements OnInit {
   users: User[];
   messages: Message[];
   messageLike: Message;
-  displayedColumns = ['userId','token','actionsColumn'];
+  displayedColumns = ['userId','token','actionsColumn','likeCounter'];
 
   constructor(private userService: UserService, private messageService: MessageService, private router: Router) { }
 
@@ -51,7 +53,6 @@ export class ListComponent implements OnInit {
       .likePost(message.id)
       .subscribe((data: Message) => {
         this.messageLike = data;
-        console.log(this.messages);
         let indexMessage =  this.messages.findIndex(obj => obj.id === this.messageLike.id);
         let indexUser = this.messages[indexMessage].Users.findIndex(obj => obj.username === localStorage.getItem('username'));
         if(indexUser > -1 )
@@ -72,9 +73,10 @@ export class ListComponent implements OnInit {
     });
   }
 
+  
+
   isLiked(message) {
     var indexUser = message.Users.findIndex(obj => obj.username ,  localStorage.getItem('username'));
-    console.log()
     if(indexUser >= 0)
     {
       if(message.Users[indexUser].Like.isLike == 1)
@@ -83,6 +85,11 @@ export class ListComponent implements OnInit {
     return false;
   }
 
+  logout() {
+    console.log("logout?");
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
   //  this.userService.register().subscribe((users) => {
     //    console.log(users);
         //video part 3 need to finish end

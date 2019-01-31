@@ -1,3 +1,5 @@
+import { UserLikes } from './userlikes.model';
+
 export interface Message {
   id: number;
   title: String;
@@ -5,4 +7,5 @@ export interface Message {
   attachment: String;
   likes: number;
   userId: number;
+  Users: [UserLikes];
 }
